@@ -11,8 +11,7 @@ import java.util.UUID;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Product{
-    private UUID uuid = UUID.randomUUID();
+public class Product extends BaseModel{
     private String name;
     private String photoUrl;
     private double price;

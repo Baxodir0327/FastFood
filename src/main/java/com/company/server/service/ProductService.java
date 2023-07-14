@@ -28,21 +28,21 @@ public class ProductService implements BaseService<Product>{
     }
 
     @Override
-    public Optional<Product> getById(Long id) {
+    public Product getById(UUID id) {
         return readFile().stream()
-                .filter(product -> product.getUuid().equals(id)).findFirst();
+                .filter(product -> product.getId().equals(id)).findFirst().orElse(null);
     }
 
     @Override
     public void delete(UUID id) {
          List<Product> products = readFile();
-         products.removeIf(product -> product.getUuid().equals(id));
+         products.removeIf(product -> product.getId().equals(id));
          writeFile(products);
     }
 
     @Override
     public Product update(Product product) {
-        delete(product.getUuid());
+        delete(product.getId());
         add(product);
         return product;
     }

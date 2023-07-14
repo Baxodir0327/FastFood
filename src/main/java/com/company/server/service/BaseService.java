@@ -4,7 +4,6 @@ package com.company.server.service;
 import com.google.gson.Gson;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 public interface BaseService<T> {
@@ -15,7 +14,7 @@ public interface BaseService<T> {
 
     List<T> getAll();
 
-    Optional<T> getById(Long id);
+    T getById(UUID id);
 
     void delete(UUID id);
 

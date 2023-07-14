@@ -2,13 +2,12 @@ package com.company.server.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.EqualsAndHashCode;
 
-
-import java.util.UUID;
+@EqualsAndHashCode(callSuper = true)
 @Data
-public class Order {
-    private UUID id;
-    private MyUser myUser;
+@AllArgsConstructor
+public class Order extends BaseModel{
+    private User user;
     private String address;
 }

@@ -9,10 +9,7 @@ import java.util.UUID;
 @Getter
 @Setter
 @AllArgsConstructor
-
-public class BasketProduct{
-    private final UUID uuid = UUID.randomUUID();
+public class BasketProduct extends BaseModel {
     private Product product;
-    private Integer count;
-    private boolean clientAdded;
+    private int count;
 }

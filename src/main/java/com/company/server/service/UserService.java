@@ -1,55 +1,60 @@
 package com.company.server.service;
 
 
-import com.company.server.model.MyUser;
+import com.company.server.model.User;
 import com.google.gson.reflect.TypeToken;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
-import java.time.LocalDateTime;
 import java.util.*;
 
-public class UserService implements BaseService<MyUser> {
+public class UserService implements BaseService<User> {
     Path path = Path.of("src/main/java/resources/users.json");
 
     @Override
-    public MyUser add(MyUser user) {
-        List<MyUser> users = readFile();
+    public User add(User user) {
+        List<User> users = readFile();
         users.add(user);
         writeFile(users);
         return user;
     }
 
     @Override
-    public List<MyUser> getAll() {
+    public List<User> getAll() {
         return readFile();
     }
 
     @Override
-    public Optional<MyUser> getById(Long chatId) {
+    public User getById(UUID id) {
         return readFile().stream()
                 .parallel()
-                .filter(user -> user.getChatId().equals(chatId)).findFirst();
+                .filter(user -> user.getId().equals(id)).findFirst().orElse(null);
+    }
+
+    public Optional<User> getById(Long id) {
+        return readFile().stream()
+                .parallel()
+                .filter(user -> user.getChatId().equals(id)).findFirst();
     }
 
     @Override
     public void delete(UUID id) {
-        List<MyUser> users = readFile();
+        List<User> users = readFile();
         users.removeIf(user -> user.getId().equals(id));
         writeFile(users);
     }
 
     @Override
-    public MyUser update(MyUser user) {
+    public User update(User user) {
         delete(user.getId());
         add(user);
         return user;
     }
 
     @Override
-    public void writeFile(List<MyUser> list) {
+    public void writeFile(List<User> list) {
 
         try {
             Files.writeString(path, gson.toJson(list), StandardOpenOption.TRUNCATE_EXISTING);
@@ -60,10 +65,9 @@ public class UserService implements BaseService<MyUser> {
     }
 
     @Override
-    public List<MyUser> readFile() {
-
+    public List<User> readFile() {
         try {
-            List<MyUser> users = gson.fromJson(Files.readString(path), new TypeToken<List<MyUser>>() {
+            List<User> users = gson.fromJson(Files.readString(path), new TypeToken<List<User>>() {
             }.getType());
             if (Objects.isNull(users)) {
                 return new ArrayList<>();
