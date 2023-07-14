@@ -1,19 +1,23 @@
 package com.company.server.model;
 
-import lombok.*;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
-
-@AllArgsConstructor
+@Data
 @NoArgsConstructor
-@Getter
-@Setter
-@ToString
 public class Basket {
-    private final UUID id=UUID.randomUUID();
-    private LocalDateTime time;
-    private List<BasketProduct> basketPradacts;
+    private String id;
+    private Date date;
+    private List<BasketProduct> basketProducts;
     private MyUser myUser;
+
+    public Basket(Date date, List<BasketProduct> basketProducts, MyUser myUser) {
+        this.id = UUID.randomUUID().toString();
+        this.date = date;
+        this.basketProducts = basketProducts;
+        this.myUser = myUser;
+    }
 }
