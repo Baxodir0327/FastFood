@@ -9,10 +9,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 
 public class UserService implements BaseService<MyUser> {
     Path path = Path.of("src/main/java/resources/users.json");
@@ -31,9 +28,9 @@ public class UserService implements BaseService<MyUser> {
     }
 
     @Override
-    public MyUser getById(UUID id) {
+    public Optional<MyUser> getById(Long chatId) {
         return readFile().stream()
-                .filter(user -> user.getId().equals(id)).findFirst().orElse(null);
+                .filter(user -> user.getChatId().equals(chatId)).findFirst();
     }
 
     @Override
@@ -45,7 +42,6 @@ public class UserService implements BaseService<MyUser> {
 
     @Override
     public MyUser update(MyUser user) {
-        user.setUpdate(LocalDateTime.now());
         delete(user.getId());
         add(user);
         return user;
