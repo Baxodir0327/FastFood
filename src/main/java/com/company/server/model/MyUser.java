@@ -6,19 +6,14 @@ import lombok.*;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-@Getter
-@Setter
-@ToString
-@AllArgsConstructor
-@NoArgsConstructor
+@Data
+@Builder
 public class MyUser {
     private UUID id = UUID.randomUUID();
     private String fullName;
     private String username;
     private String phoneNumber;
     private Long chatId;
-    private LocalDateTime created;
-    private LocalDateTime update;
     private States states;
 
 }
