@@ -1,19 +1,18 @@
 package com.company.server.model;
 
 import com.company.server.enums.States;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-@Data
-@Builder
+@Getter
+@Setter
+@ToString
 @AllArgsConstructor
+@NoArgsConstructor
 public class MyUser {
-    private UUID id;
+    private UUID id = UUID.randomUUID();
     private String fullName;
     private String username;
     private String phoneNumber;
