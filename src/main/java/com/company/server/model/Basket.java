@@ -11,6 +11,8 @@ import java.util.UUID;
 public class Basket {
     private String id;
     private Date date;
+
+
     private List<BasketProduct> basketProducts;
     private MyUser myUser;
 
