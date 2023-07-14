@@ -8,7 +8,9 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 
-public class BasketPradact {
+public class BasketProduc
+        t {
+
     private Product product;
 
     private Integer count;
