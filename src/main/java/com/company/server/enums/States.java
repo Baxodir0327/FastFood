@@ -7,5 +7,4 @@ public enum States {
     ROOT_CATEGORY,
     CHILD_CATEGORY,
     LOCATION_ACCEPTED,
-
 }
