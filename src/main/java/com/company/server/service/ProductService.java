@@ -12,7 +12,7 @@ import java.util.*;
 
 // Bilol yozyapti
 public class ProductService implements BaseService<Product>{
-    Path path = Path.of("src/main/resources/product.json");
+    String  path = "src/main/resources/product.json";
 
     @Override
     public Product add(Product product) {
@@ -50,7 +50,7 @@ public class ProductService implements BaseService<Product>{
     @Override
     public void writeFile(List<Product> list) {
         try {
-            Files.writeString(path, gson.toJson(list), StandardOpenOption.TRUNCATE_EXISTING);
+            Files.writeString(Path.of(path), gson.toJson(list), StandardOpenOption.TRUNCATE_EXISTING);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -60,10 +60,23 @@ public class ProductService implements BaseService<Product>{
     public List<Product> readFile() {
         Type type = new TypeToken<List<Product>>() {
         }.getType();
-        List<Product> products = gson.fromJson(String.valueOf(path), type);
+
+        List<Product> products = null;
+        try {
+            products = gson.fromJson(Files.readString(Path.of(path)), type);
+        } catch (IOException e) {
+
+        }
         if (Objects.isNull(products)){
-            return Collections.EMPTY_LIST;
+            return new ArrayList<>();
         }
         return products;
+    }
+
+    public List<Product> getProductsByCategoryName(String text) {
+        return getAll()
+                .stream()
+                .filter(product -> product.getCategory().getName().equals(text))
+                .toList();
     }
 }

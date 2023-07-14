@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -65,7 +66,7 @@ public class CategoryService implements BaseService<Category> {
             List<Category> categories = gson.fromJson(Files.readString(path), new TypeToken<List<Category>>() {
             }.getType());
             if (Objects.isNull(categories)){
-                return null;
+                return new ArrayList<>();
             }
             return categories;
         } catch (IOException e) {
