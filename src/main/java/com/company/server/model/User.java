@@ -5,6 +5,8 @@ import lombok.*;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
 public class User extends BaseModel{
     private String fullName;

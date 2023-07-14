@@ -11,7 +11,8 @@ import java.util.List;
 
 //Doniyor yozyapti
 public class CreateButtonService {
-    public ReplyKeyboardMarkup createReplyButton(List<String> buttonsTitle) {
+
+    public ReplyKeyboardMarkup createReplyButton(List<String> buttonsTitle, boolean shareContact) {
 
         List<KeyboardRow> rows = new ArrayList<>();
         KeyboardRow row = new KeyboardRow();
@@ -21,20 +22,23 @@ public class CreateButtonService {
                 rows.add(row);
                 row = new KeyboardRow();
             }
-            row.add(new KeyboardButton(buttonsTitle.get(i)));
+            KeyboardButton e = new KeyboardButton(buttonsTitle.get(i));
+            e.setRequestContact(shareContact);
+            row.add(e);
 
         }
 
         rows.add(row);
 
         ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
-
+         replyKeyboardMarkup.setOneTimeKeyboard(shareContact);
+         replyKeyboardMarkup.setSelective(shareContact);
         replyKeyboardMarkup.setKeyboard(rows);
         replyKeyboardMarkup.setResizeKeyboard(true);
         return replyKeyboardMarkup;
     }
 
-    public InlineKeyboardMarkup createInlineKeyboard(List<String> keyboasrdList,int numberOfRows) {
+    public InlineKeyboardMarkup createInlineKeyboard(List<String> keyboasrdList, int numberOfRows) {
 
         InlineKeyboardMarkup keyboardMarkup = new InlineKeyboardMarkup();
         List<List<InlineKeyboardButton>> rows = new ArrayList<>();

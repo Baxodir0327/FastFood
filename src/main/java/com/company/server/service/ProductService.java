@@ -12,7 +12,7 @@ import java.util.*;
 
 // Bilol yozyapti
 public class ProductService implements BaseService<Product>{
-    Path path = Path.of("src/main/java/resources/product.json");
+    Path path = Path.of("src/main/resources/product.json");
 
     @Override
     public Product add(Product product) {

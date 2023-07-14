@@ -11,7 +11,7 @@ import java.nio.file.StandardOpenOption;
 import java.util.*;
 
 public class UserService implements BaseService<User> {
-    Path path = Path.of("src/main/java/resources/users.json");
+    Path path = Path.of("src/main/resources/user.json");
 
     @Override
     public User add(User user) {
