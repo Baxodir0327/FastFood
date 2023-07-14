@@ -11,13 +11,13 @@ import java.util.UUID;
 public class Basket {
     private String id;
     private Date date;
-    private List<BasketPradact> basketPradacts;
+    private List<BasketProduct> basketProducts;
     private MyUser myUser;
 
-    public Basket(Date date, List<BasketPradact> basketPradacts, MyUser myUser) {
+    public Basket(Date date, List<BasketProduct> basketProducts, MyUser myUser) {
         this.id = UUID.randomUUID().toString();
         this.date = date;
-        this.basketPradacts = basketPradacts;
+        this.basketProducts = basketProducts;
         this.myUser = myUser;
     }
 }
