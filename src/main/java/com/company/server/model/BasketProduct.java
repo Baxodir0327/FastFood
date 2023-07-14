@@ -8,8 +8,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 
-public class BasketProduc
-        t {
+public class BasketProduct{
 
     private Product product;
 
