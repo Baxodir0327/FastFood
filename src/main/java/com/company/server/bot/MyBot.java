@@ -7,6 +7,7 @@ public class MyBot extends TelegramLongPollingBot {
     @Override
     public void onUpdateReceived(Update update) {
 
+        System.out.println("started");
     }
 
     @Override
