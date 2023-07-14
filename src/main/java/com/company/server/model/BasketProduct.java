@@ -14,6 +14,5 @@ public class BasketProduct{
     private final UUID uuid = UUID.randomUUID();
     private Product product;
     private Integer count;
-
     private boolean clientAdded;
 }

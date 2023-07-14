@@ -1,18 +1,15 @@
 package com.company.server.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import java.util.UUID;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class Order {
-    private final String id;
+    private final UUID id = UUID.randomUUID();
     private MyUser myUser;
-    private String adress;
-
-    public Order(MyUser myUser, String adress) {
-        this.id = UUID.randomUUID().toString();
-        this.myUser = myUser;
-        this.adress = adress;
-    }
+    private String address;
 
 }
