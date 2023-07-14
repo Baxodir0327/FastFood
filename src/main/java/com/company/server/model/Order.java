@@ -4,14 +4,11 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.UUID;
 
+import java.util.UUID;
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
 public class Order {
-    private final UUID id = UUID.randomUUID();
+    private UUID id;
     private MyUser myUser;
     private String address;
-
 }
