@@ -30,6 +30,7 @@ public class UserService implements BaseService<MyUser> {
     @Override
     public Optional<MyUser> getById(Long chatId) {
         return readFile().stream()
+                .parallel()
                 .filter(user -> user.getChatId().equals(chatId)).findFirst();
     }
 
