@@ -1,7 +1,6 @@
 package com.company.server.model;
 
 import lombok.Data;
-
 import java.util.UUID;
 
 @Data
