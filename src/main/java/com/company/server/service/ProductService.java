@@ -29,7 +29,7 @@ public class ProductService implements BaseService<Product> {
     @Override
     public Product getById(UUID id) {
         return readFile().stream()
-                .filter(product -> product.getId().equals(id)).findFirst().orElse(null);
+               .filter(product -> product.getId().equals(id)).findFirst().orElse(null);
     }
 
     @Override
@@ -57,7 +57,7 @@ public class ProductService implements BaseService<Product> {
 
     @SneakyThrows
     @Override
-    public List readFile() {
+    public List<Product> readFile() {
         return gson.fromJson(Files.readString(Path.of(path)), new TypeToken<List>() {}.getType());
     }
 
