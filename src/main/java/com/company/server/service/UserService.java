@@ -56,7 +56,7 @@ public class UserService implements BaseService<User> {
     @SneakyThrows
     @Override
     public void writeFile(List<User> list) {
-        Files.writeString(path, gson.toJson(list), StandardOpenOption.WRITE);
+        Files.writeString(path, gson.toJson(list), StandardOpenOption.TRUNCATE_EXISTING);
     }
 
     @SneakyThrows
