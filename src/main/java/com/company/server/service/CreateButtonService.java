@@ -8,9 +8,10 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.Keyboard
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class CreateButtonService {
-
+    private UUID id;
     public ReplyKeyboardMarkup createReplyButton(List<String> buttonsTitle, boolean shareContact) {
 
         List<KeyboardRow> rows = new ArrayList<>();
@@ -47,7 +48,8 @@ public class CreateButtonService {
             for (int i = 0; i < numberOfRows && currentNumber <= maxNumber; i++) {
                 InlineKeyboardButton button = new InlineKeyboardButton();
                 button.setText(keyboasrdList.get(i));
-                button.setCallbackData(String.valueOf(currentNumber));
+                String id = keyboasrdList.get(i);
+                button.setCallbackData(id);
                 row.add(button);
                 currentNumber++;
             }
