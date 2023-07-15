@@ -19,7 +19,7 @@ import java.util.Optional;
 
 public class MyBot extends TelegramLongPollingBot {
     private static UserService userService = new UserService();
-    private static  CategoryService categoryService = new CategoryService();
+    private static CategoryService categoryService = new CategoryService();
     private static CreateButtonService createButtonService = new CreateButtonService();
 
     public MyBot(String botToken) {
@@ -69,16 +69,29 @@ public class MyBot extends TelegramLongPollingBot {
                         userService.update(user);
                         myExecute(chatId, "enter phone number",
                                 createButtonService.createReplyButton(List.of("\uD83D\uDCDE Share contact"), true));
-                    }
-                    else if (user.getState().equals(State.MAIN_PAGE)) {
-                        startMainPage(chatId, createButtonService);
+
+                    } else if (user.getState().equals(State.MAIN_PAGE)) {
+
+                        mainPage(chatId, createButtonService);
+                        user.setState(State.CHOOSE);
+                        userService.update(user);
+
+                    } else if (user.getState().equals(State.CHOOSE)) {
+                        switch (text) {
+                            case "\uD83D\uDECD Buyurtma berish" -> categoryPage(chatId, user);
+                            case "\uD83D\uDCAC Biz biz bilan aloqa" -> chatPage(chatId, user);
+                            case "⚙\uFE0F Sozlash" -> settingsPage(chatId, user);
+                            default -> {
+                                myExecute(chatId, "Wrong operation");
+                            }
+                        }
                     }
                 }
-            }else if (message.hasContact()){
+            } else if (message.hasContact()) {
                 user.setState(State.MAIN_PAGE);
                 String phoneNumber = message.getContact().getPhoneNumber();
                 user.setPhoneNumber(phoneNumber);
-                startMainPage(chatId,createButtonService);
+                mainPage(chatId, createButtonService);
                 userService.update(user);
             }
 
@@ -87,9 +100,24 @@ public class MyBot extends TelegramLongPollingBot {
         }
     }
 
-    private void startMainPage(Long chatId, CreateButtonService createButtonService) {
+    private void settingsPage(Long chatId, User user) {
+        //TODO Baxodri aka
+        myExecute(chatId, "Settings");
+    }
+
+    private void chatPage(Long chatId, User user) {
+        //TODO Nodir aka
+        myExecute(chatId, "Chat");
+    }
+
+    private void categoryPage(Long chatId, User user) {
+        //TODO Doniyor
+        myExecute(chatId, "Category");
+    }
+
+    private void mainPage(Long chatId, CreateButtonService createButtonService) {
         ReplyKeyboardMarkup replyButton = createButtonService.createReplyButton(List.of("\uD83D\uDECD Buyurtma berish", "\uD83D\uDCAC Biz biz bilan aloqa", "⚙\uFE0F Sozlash"), false);
-        myExecute(chatId,"choose ",replyButton);
+        myExecute(chatId, "Choose ", replyButton);
     }
 
     private Message myExecute(Long chatId, String text) {
