@@ -1,15 +1,12 @@
 package com.company.server.service;
 
-
 import com.company.server.model.Order;
-import com.company.server.model.User;
 import com.google.gson.reflect.TypeToken;
 import lombok.SneakyThrows;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -23,7 +20,6 @@ public class OrderService implements BaseService<Order> {
         writeFile(orderList);
         return order;
     }
-
     @Override
     public List<Order> getAll() {
         return readFile();
@@ -41,7 +37,6 @@ public class OrderService implements BaseService<Order> {
         List<Order> orderList = readFile();
         orderList.removeIf(order -> order.getId().equals(id));
         writeFile(orderList);
-
     }
 
     @Override
@@ -55,7 +50,6 @@ public class OrderService implements BaseService<Order> {
     @Override
     public void writeFile(List<Order> list) {
         Files.writeString(path, gson.toJson(list), StandardOpenOption.TRUNCATE_EXISTING);
-
     }
 
     @SneakyThrows
