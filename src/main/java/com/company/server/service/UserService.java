@@ -59,16 +59,9 @@ public class UserService implements BaseService<User> {
         Files.writeString(path, gson.toJson(list), StandardOpenOption.WRITE);
     }
 
+    @SneakyThrows
     @Override
     public List<User> readFile() {
-        try {
-            List<User> users = gson.fromJson(Files.readString(path), new TypeToken<List<User>>() {}.getType());
-            if (Objects.isNull(users)) {
-                return new ArrayList<>();
-            }
-            return users;
-        } catch (IOException e) {
-            throw new RuntimeException();
-        }
+        return gson.fromJson(Files.readString(path), new TypeToken<List<User>>() {}.getType());
     }
 }
