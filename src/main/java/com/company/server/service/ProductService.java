@@ -2,9 +2,9 @@ package com.company.server.service;
 
 import com.company.server.model.Product;
 import com.google.gson.reflect.TypeToken;
+import lombok.SneakyThrows;
 
 import java.io.IOException;
-import java.lang.reflect.Type;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
@@ -55,21 +55,10 @@ public class ProductService implements BaseService<Product> {
         }
     }
 
+    @SneakyThrows
     @Override
-    public List<Product> readFile() {
-        Type type = new TypeToken<List<Product>>() {
-        }.getType();
-
-        List<Product> products = null;
-        try {
-            products = gson.fromJson(Files.readString(Path.of(path)), type);
-        } catch (IOException e) {
-
-        }
-        if (Objects.isNull(products)) {
-            return new ArrayList<>();
-        }
-        return products;
+    public List readFile() {
+        return gson.fromJson(Files.readString(Path.of(path)), new TypeToken<List>() {}.getType());
     }
 
     public List<Product> getProductsByCategoryName(String text) {
