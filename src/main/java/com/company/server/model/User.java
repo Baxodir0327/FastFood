@@ -15,5 +15,5 @@ public class User extends BaseModel{
         private String phoneNumber;
         private Long chatId;
         private State state;
-    }
+}
 
