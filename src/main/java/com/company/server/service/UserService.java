@@ -33,10 +33,10 @@ public class UserService implements BaseService<User> {
                 .filter(user -> user.getId().equals(id)).findFirst().orElse(null);
     }
 
-    public Optional<User> getById(Long id) {
+    public Optional<User> getByChatId(Long id) {
         return readFile().stream()
-                .parallel()
-                .filter(user -> user.getChatId().equals(id)).findFirst();
+                .filter(user -> user.getChatId().equals(id))
+                .findFirst();
     }
 
     @Override
