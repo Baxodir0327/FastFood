@@ -73,4 +73,12 @@ public class CategoryService implements BaseService<Category> {
             throw new RuntimeException(e);
         }
     }
+
+    public Category getByName(String name) {
+        return getAll()
+                .stream()
+                .filter(c -> c.getName().equals(name))
+                .findFirst()
+                .orElse(null);
+    }
 }

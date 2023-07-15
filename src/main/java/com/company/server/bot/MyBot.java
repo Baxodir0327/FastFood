@@ -8,6 +8,7 @@ import com.company.server.service.ProductService;
 import com.company.server.service.UserService;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Contact;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
@@ -26,6 +27,8 @@ public class MyBot extends TelegramLongPollingBot {
     private CreateButtonService createButtonService = new CreateButtonService();
     private List<User> users = new ArrayList<>();
 
+    private Product product = null;
+
     public MyBot() {
         super("6384156412:AAFfuQyvX422k63RrMBg1-FrI9R2ZJVTrDk");
     }
@@ -35,7 +38,7 @@ public class MyBot extends TelegramLongPollingBot {
     @Override
     public void onUpdateReceived(Update update) {
 
-        if (update.hasMessage()) {
+        if (update.hasMessage() || update.hasCallbackQuery()) {
             Message message = update.getMessage();
             Long chatId = message.getChatId();
             User user;
@@ -45,6 +48,20 @@ public class MyBot extends TelegramLongPollingBot {
                     filter(u -> u.getChatId().equals(chatId)).findFirst()
                     .orElse(null));
 
+            if (update.hasCallbackQuery()) {
+                CallbackQuery callbackQuery = update.getCallbackQuery();
+                String categoryName = callbackQuery.getData();
+
+                System.out.println(categoryName);
+                user.setState(State.ENTER_PRODUCT_NAME);
+                userService.update(user);
+
+                getExecuteMessage("Enter product name", chatId);
+                product = new Product();
+                product.setCategory(new CategoryService().getByName(categoryName));
+
+                return;
+            }
 
             if (message.hasText()) {
                 String text = message.getText();
@@ -55,6 +72,8 @@ public class MyBot extends TelegramLongPollingBot {
                     user.setChatId(chatId);
                     getExecuteMessage("Enter full name", chatId);
                     users.add(user);
+                } else if (user == null) {
+                    getExecuteMessage("/start ni bos, 🤬", chatId);
                 } else if (user.getState().equals(State.ENTER_NAME)) {
                     user.setFullName(text);
                     user.setState(State.PHONE_NUMBER);
@@ -74,15 +93,20 @@ public class MyBot extends TelegramLongPollingBot {
                         user.setState(State.ENTER_CATEGORY_NAME);
                         userService.update(user);
                     } else {
-                        //categories(chatId, user, new CategoryService());
+                        System.out.println();
+                        categories(chatId, user, new CategoryService());
                         ProductService productService = new ProductService();
-                        List<Product> products=productService.getProductsByCategoryName(text);
+                        List<Product> products = productService.getProductsByCategoryName(text);
                         List<String> list = products.stream().map(Product::getName).toList();
+
+                        user.setState(State.CHOOSE_PRODUCT);
+                        userService.update(user);
+
                         ArrayList<String> strings = new ArrayList<>(list);
                         strings.add("Add product");
                         //list.add("ADD product");
-                        InlineKeyboardMarkup inlineKeyboard = createButtonService.createInlineKeyboard(strings, 2);
-                        getExecuteMessage("choose product",chatId,inlineKeyboard);
+                        InlineKeyboardMarkup inlineKeyboard = createButtonService.createInlineKeyboard(strings, 3);
+                        getExecuteMessage("choose product", chatId, inlineKeyboard);
                     }
                 } else if (user.getState().equals(State.ENTER_CATEGORY_NAME)) {
                     CategoryService categoryService = new CategoryService();
@@ -91,8 +115,37 @@ public class MyBot extends TelegramLongPollingBot {
                     userService.update(user);
 
                     getExecuteMessage("main page", chatId);
-
                     categories(chatId, user, categoryService);
+                } else if (user.getState().equals(State.ENTER_PRODUCT_NAME)) {
+                    product.setName(text);
+                    getExecuteMessage("Enter product price", chatId);
+                    user.setState(State.ENTER_PRODUCT_PRICE);
+                    userService.update(user);
+                } else if (user.getState().equals(State.ENTER_PRODUCT_PRICE)) {
+                    try {
+                        product.setPrice(Double.parseDouble(text));
+                    }catch (Exception e) {
+                        getExecuteMessage("Enter product price", chatId);
+                        return;
+                    }
+
+                    getExecuteMessage("Enter product url", chatId);
+                    user.setState(State.ENTER_PRODUCT_URL);
+                    userService.update(user);
+                } else if (user.getState().equals(State.ENTER_PRODUCT_URL)) {
+                    product.setPhotoUrl(text);
+                    new ProductService().add(product);
+                    product = null;
+                    user.setState(State.CHOOSE_CATEGORY);
+
+                    ProductService productService = new ProductService();
+                    List<Product> products = productService.getProductsByCategoryName(text);
+                    List<String> list = products.stream().map(Product::getName).toList();
+
+                    ArrayList<String> strings = new ArrayList<>(list);
+                    strings.add("Add product");
+                    InlineKeyboardMarkup inlineKeyboard = createButtonService.createInlineKeyboard(strings, 3);
+                    getExecuteMessage("choose product", chatId, inlineKeyboard);
                 }
             }
             if (message.hasContact() && user.getState().equals(State.PHONE_NUMBER)) {
@@ -103,6 +156,9 @@ public class MyBot extends TelegramLongPollingBot {
                 userService.add(user);
                 users.remove(user);
                 getExecuteMessage("Xush kelibsiz mazgi", chatId);
+                CategoryService categoryService = new CategoryService();
+
+                categories(chatId, user, categoryService);
             }
         }
 
@@ -124,7 +180,8 @@ public class MyBot extends TelegramLongPollingBot {
     }
 
     private static boolean isAdmin(Long chatId) {
-        return chatId == 1806459310;
+//        return chatId == 1806459310L;
+        return chatId == 5993838612L;
     }
 
     private Message getExecuteMessage(String text, Long chatId, ReplyKeyboard shareContact) {
