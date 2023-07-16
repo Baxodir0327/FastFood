@@ -26,6 +26,7 @@ public class CreateButtonService {
             e.setRequestContact(shareContact);
             row.add(e);
         }
+
         rows.add(row);
         ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
         replyKeyboardMarkup.setOneTimeKeyboard(shareContact);

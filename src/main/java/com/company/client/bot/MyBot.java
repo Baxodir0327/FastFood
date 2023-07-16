@@ -1,6 +1,9 @@
 package com.company.client.bot;
 
+import com.company.admin.BotCategoryService;
+import com.company.client.bot.BotConstants;
 import com.company.server.enums.State;
+import com.company.server.model.Category;
 import com.company.server.model.User;
 import com.company.server.service.CategoryService;
 import com.company.server.service.CreateButtonService;
@@ -14,8 +17,8 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboard;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class MyBot extends TelegramLongPollingBot {
     private static UserService userService = new UserService();
@@ -58,11 +61,14 @@ public class MyBot extends TelegramLongPollingBot {
                             Hello! First you need to register to use our bot
                             Enter full name:
                             """;
-                    sendMessage.setText(text);
-                    sendMessage.setChatId(chatId);
-                    execute(sendMessage);
+                    myExecute(chatId, text);
+                } else if (text.equals("/start") && user.getPhoneNumber() != null) {
+                    myExecute(chatId, "Welcome " + user.getFullName());
+                    mainPage(chatId, createButtonService);
+                    user.setState(State.CHOOSE);
+                    userService.update(user);
                 } else {
-                    CreateButtonService createButtonService = new CreateButtonService();
+
                     if (user.getState().equals(State.ENTER_NAME)) {
                         user.setFullName(text);
                         user.setState(State.PHONE_NUMBER);
@@ -85,14 +91,35 @@ public class MyBot extends TelegramLongPollingBot {
                                 myExecute(chatId, "Wrong operation");
                             }
                         }
+                    } else if (user.getState().equals(State.CHOOSE_CATEGORY)) {
+
+                        List<Category> categories = categoryService.getAll();
+                        String finalText = text;
+                        List<String> list = categories.stream().
+                                filter(category -> Objects.equals(category.getParentName(), finalText)).
+                                map(Category::getName).toList();
+                        ReplyKeyboardMarkup replyButton = createButtonService.createReplyButton(list, false);
+
+                        if (list.isEmpty()) {
+                            myExecute(chatId, "Bu categoryda taom mavjud emas");
+                            categoryPage(chatId, user);
+                        } else {
+                            myExecute(chatId, "Taomni tanlang", replyButton);
+                            user.setState(State.CHOOSE_PRODUCT);
+                            userService.update(user);
+                        }
+                    } else if (user.getState().equals(State.CHOOSE_PRODUCT)) {
+
                     }
                 }
             } else if (message.hasContact()) {
+
                 user.setState(State.MAIN_PAGE);
                 String phoneNumber = message.getContact().getPhoneNumber();
                 user.setPhoneNumber(phoneNumber);
                 mainPage(chatId, createButtonService);
                 userService.update(user);
+
             }
 
         } else if (update.hasCallbackQuery()) {
@@ -103,6 +130,8 @@ public class MyBot extends TelegramLongPollingBot {
     private void settingsPage(Long chatId, User user) {
         //TODO Baxodri aka
         myExecute(chatId, "Settings");
+
+
     }
 
     private void chatPage(Long chatId, User user) {
@@ -111,12 +140,22 @@ public class MyBot extends TelegramLongPollingBot {
     }
 
     private void categoryPage(Long chatId, User user) {
-        //TODO Doniyor
-        myExecute(chatId, "Category");
+
+        List<Category> allCategory = categoryService.getAll();
+        List<String> categoryNames = allCategory.stream().filter(category -> category.getParentName() == null)
+                .map(category -> category.getName()).toList();
+        ReplyKeyboardMarkup replyButton = createButtonService.createReplyButton(categoryNames, false);
+        myExecute(chatId, "Nimadan boshlaymiz " + user.getFullName(), replyButton);
+        user.setState(State.CHOOSE_CATEGORY);
+        userService.update(user);
+
     }
 
+
     private void mainPage(Long chatId, CreateButtonService createButtonService) {
-        ReplyKeyboardMarkup replyButton = createButtonService.createReplyButton(List.of("\uD83D\uDECD Buyurtma berish", "\uD83D\uDCAC Biz biz bilan aloqa", "⚙\uFE0F Sozlash"), false);
+        List<String> mainCategory = List.of("\uD83D\uDECD Buyurtma berish", "\uD83D\uDCAC Biz biz bilan aloqa", "⚙\uFE0F Sozlash");
+        //categoryService.writeFile();
+        ReplyKeyboardMarkup replyButton = createButtonService.createReplyButton(mainCategory, false);
         myExecute(chatId, "Choose ", replyButton);
     }
 
