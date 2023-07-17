@@ -198,7 +198,6 @@ public class MyBot extends TelegramLongPollingBot {
                                 sb.append(basketProduct.getProduct().getName()).append("\n").append(count).append(" * ").append(price).append(" = ").append(price * count).append("\n");
                             }
                             sb.append("\n\n").append("Umumiy:").append(summa);
-
                             List<String> productList = basketProducts.stream().map(basketProduct -> basketProduct.getProduct().getName()).collect(Collectors.toList());
                             productList.addAll(List.of("Qaytish", "Tozalsh"));
                             ReplyKeyboardMarkup replyButton = createButtonService.createReplyButton(productList, false);
