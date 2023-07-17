@@ -1,1 +1,65 @@
-[{"name":"CHICKEN 1 PCS SPICY","photoUrl":"resources/images/CHICKEN1PCSSPICY.jpg","price":10000.0,"categoryName":"Add product","id":"f2233b01-3821-4e65-a9a8-46fe748e0260"}]
+[
+  {
+    "name": "CHICKEN 1 PCS SPICY",
+    "photoUrl": "resources/images/CHICKEN1PCSSPICY.jpg",
+    "price": 10000.0,
+    "categoryName": "Add product",
+    "id": "f2233b01-3821-4e65-a9a8-46fe748e0260"
+  },
+  {
+    "name": "sdf",
+    "photoUrl": null,
+    "price": 0.0,
+    "categoryName": "🥗 Saladlar",
+    "id": "3755e112-7d5f-4c9b-a49b-37de22bd3845"
+  },
+  {
+    "name": "don",
+    "photoUrl": "src/main/resources/photos/file_14.jpg",
+    "price": 0.0,
+    "categoryName": "🍕 Pitsa",
+    "id": "d26dc35e-93f3-4029-b775-adabc42f4be4"
+  },
+  {
+    "name": "DDD",
+    "photoUrl": "src/main/resources/photos/file_15.jpg",
+    "price": 10000.0,
+    "categoryName": "🍅 Sous",
+    "id": "b23e2e9c-0b0d-4526-8100-033d5b8a5319"
+  },
+  {
+    "name": "Bilol",
+    "photoUrl": "src/main/resources/photos/file_11.jpg",
+    "price": 10000.0,
+    "categoryName": "🍅 Sous",
+    "id": "6c922d52-bf0e-4a54-bed0-84f2a2de781f"
+  },
+  {
+    "name": "d",
+    "photoUrl": "src/main/resources/photos/file_14.jpg",
+    "price": 40000.0,
+    "categoryName": "🍅 Sous",
+    "id": "42d01e6e-c63d-43cb-b860-4779ebcbb493"
+  },
+  {
+    "name": "gh",
+    "photoUrl": "src/main/resources/photos/file_14.jpg",
+    "price": 790.0,
+    "categoryName": "🍕 Pitsa",
+    "id": "132c599e-6277-468e-bb4d-66904006259e"
+  },
+  {
+    "name": "ds",
+    "photoUrl": "src/main/resources/photos/file_14.jpg",
+    "price": 300.0,
+    "categoryName": "🍕 Pitsa",
+    "id": "70be94b2-4ff4-4d99-9f59-a4479fe186d7"
+  },
+  {
+    "name": "as",
+    "photoUrl": "src/main/resources/photos/file_15.jpg",
+    "price": 700.0,
+    "categoryName": "🍕 Pitsa",
+    "id": "f1c541a6-8bb1-4dba-b703-b346ab3ffebf"
+  }
+]

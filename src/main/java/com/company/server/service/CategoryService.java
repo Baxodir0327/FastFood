@@ -8,7 +8,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 public class CategoryService implements BaseService<Category> {
     Path path = Path.of("src/main/resources/category.json");
@@ -58,5 +60,16 @@ public class CategoryService implements BaseService<Category> {
     public List<Category> readFile() {
         return gson.fromJson(Files.readString(path), new TypeToken<List<Category>>() {
         }.getType());
+    }
+
+    public List<String> getMainPageCategory(boolean admin) {
+        List<String> mainPageCategory = getAll().stream()
+                .filter(category -> Objects.equals(category.getParentName(), "MainPage"))
+                .map(Category::getName).collect(Collectors.toList());
+
+        if (admin){
+             mainPageCategory.addAll(getAll().stream().filter(category -> Objects.equals(category.getParentName(), "adminMainPage")).map(Category::getName).toList());
+        }
+        return mainPageCategory;
     }
 }

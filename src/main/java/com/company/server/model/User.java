@@ -15,5 +15,6 @@ public class User extends BaseModel{
         private Long chatId;
         private State state;
         private String chosenCategory;
+        private String lastProduct;
 }
 

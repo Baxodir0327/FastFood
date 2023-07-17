@@ -1,4 +1,4 @@
-package com.company.admin;
+package com.company;
 
 import com.company.server.model.Category;
 import com.company.server.service.CategoryService;
