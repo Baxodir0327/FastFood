@@ -1,6 +1,7 @@
 package com.company.server.service;
 
 import com.company.server.model.Category;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.google.gson.reflect.TypeToken;
 import lombok.SneakyThrows;
 
@@ -56,7 +57,7 @@ public class CategoryService implements BaseService<Category> {
     @SneakyThrows
     @Override
     public List<Category> readFile() {
-        return gson.fromJson(Files.readString(path), new TypeToken<List<Category>>() {
+        return gson.fromJson(Files.readString(path), new TypeReference<List<Category>>() {
         }.getType());
     }
 }

@@ -1,6 +1,7 @@
 package com.company.server.service;
 
 import com.company.server.model.Product;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.google.gson.reflect.TypeToken;
 import lombok.SneakyThrows;
 

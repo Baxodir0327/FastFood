@@ -162,14 +162,16 @@ public class MyBot extends TelegramLongPollingBot {
 
                            /* Category addCategory = new Category("Add product","adminProduct");
                             Category deleteCategory = new Category("Delete product","adminProduct");
-
                             categoryService.add(addCategory);
                             categoryService.add(deleteCategory);*/
+
                             String finalText = text;
                             List<Product> products = productService.getAll();
+
                             List<String> productsNames = products.stream()
                                     .filter(product -> Objects.equals(product.getCategoryName(), finalText))
                                     .map(Product::getCategoryName).collect(Collectors.toList());
+
                             if (isAdmin) {
                                 List<String> adminProduct = categoryService.getAll().stream().filter(category -> Objects.equals(category.getParentName(), "adminProduct")).map(category -> category.getName()).toList();
                                 productsNames.addAll(adminProduct);
@@ -184,23 +186,13 @@ public class MyBot extends TelegramLongPollingBot {
                                 user.setState(State.CHOOSE_PRODUCT);
                                 userService.update(user);
                             }
-                        } else if (user.getState().equals(State.CHOOSE_PRODUCT)) {
+                        } else if (isAdmin && text.equals("Add product")) {
 
-                            ProductService productService = new ProductService();
-                            List<Product> products = new ArrayList<>();
-                            Product product = new Product("CHICKEN 1 PCS SPICY", "resources/images/CHICKEN1PCSSPICY.jpg", 10000d, text);
-                            products.add(product);
-                            productService.writeFile(products);
-                            ReplyKeyboardMarkup replyButton = createButtonService.createReplyButton(List.of(product.getName()), false);
-                            myExecute(chatId, "Tanlang", replyButton);
-                            user.setState(State.CHOOSE_COUNT);
-                            userService.update(user);
-
-                        } else if (isAdmin && text.equals("+ Add product")) {
                             user.setChosenCategory(text);
                             myExecute(chatId, "Enter product name: ");
                             user.setState(State.ENTER_PRODUCT_NAME);
                             userService.update(user);
+
                         } else if (isAdmin && user.getState().equals(State.ENTER_PRODUCT_NAME)) {
                             Product product = Product.builder()
                                     .name(text)
