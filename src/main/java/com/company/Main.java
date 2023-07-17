@@ -1,4 +1,5 @@
 package com.company;
+import com.company.client.bot.BotConstants;
 import com.company.client.bot.MyBot;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
