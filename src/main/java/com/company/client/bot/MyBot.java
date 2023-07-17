@@ -221,9 +221,8 @@ public class MyBot extends TelegramLongPollingBot {
                         String path4 = "src/main/resources/menuPhoto/img_3.png";
                         sendPhoto(chatId, path4);
 
-                    } else {
-
-                    } else if (user.getState().equals(State.CHOOSE_CATEGORY) && text.equals("\uD83D\uDE97 Buyurtma qilish")) {
+                    }
+                    else if (user.getState().equals(State.CHOOSE_CATEGORY) && text.equals("\uD83D\uDE97 Buyurtma qilish")) {
                         sendLocation(text, message, chatId);
                     } else if (text.equals("◀\uFE0F Qaytish")) {
                         user.setState(State.CHOOSE_CATEGORY);
@@ -244,7 +243,8 @@ public class MyBot extends TelegramLongPollingBot {
                             user.setState(State.CHOOSE);
                             userService.update(user);
 
-                        } else if (user.getState().equals(State.CHOOSE)) {
+                        }
+                        else if (user.getState().equals(State.CHOOSE)) {
                             switch (text) {
                                 case "\uD83D\uDECD Buyurtma berish" -> categoryPage(chatId, user, isAdmin);
                                 case "\uD83D\uDCAC Biz biz bilan aloqa" -> chatPage(chatId, user);
@@ -253,7 +253,8 @@ public class MyBot extends TelegramLongPollingBot {
                                     myExecute(chatId, "Wrong operation");
                                 }
                             }
-                        } else if (user.getState().equals(State.CHOOSE_CATEGORY)) {
+                        }
+                        else if (user.getState().equals(State.CHOOSE_CATEGORY)) {
 
                            /* Category addCategory = new Category("Add product","adminProduct");
                             Category deleteCategory = new Category("Delete product","adminProduct");

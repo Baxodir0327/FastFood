@@ -1,1 +1,9 @@
-[{"name":"CHICKEN 1 PCS SPICY","photoUrl":"resources/images/CHICKEN1PCSSPICY.jpg","price":10000.0,"categoryName":"Add product","id":"f2233b01-3821-4e65-a9a8-46fe748e0260"}]
+[
+  {
+    "name": "CHICKEN 1 PCS SPICY",
+    "photoUrl": "resources/images/CHICKEN1PCSSPICY.jpg",
+    "price": 10000.0,
+    "categoryName": "Add product",
+    "id": "f2233b01-3821-4e65-a9a8-46fe748e0260"
+  }
+]
