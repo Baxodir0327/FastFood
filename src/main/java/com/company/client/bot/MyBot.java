@@ -79,7 +79,6 @@ public class MyBot extends TelegramLongPollingBot {
             throw new RuntimeException(e);
         }
     }
-
     private void myExecute(Long chatId, String message, ReplyKeyboard r) {
         SendMessage s = new SendMessage();
         s.setChatId(chatId);
