@@ -1,7 +1,5 @@
 package com.company.client.bot;
 
-import com.company.admin.BotCategoryService;
-import com.company.client.bot.BotConstants;
 import com.company.server.enums.State;
 import com.company.server.model.Category;
 import com.company.server.model.Product;
@@ -14,24 +12,23 @@ import lombok.SneakyThrows;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.GetFile;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
-import org.telegram.telegrambots.meta.api.objects.File;
-import org.telegram.telegrambots.meta.api.objects.Message;
-import org.telegram.telegrambots.meta.api.objects.PhotoSize;
-import org.telegram.telegrambots.meta.api.objects.Update;
+import org.telegram.telegrambots.meta.api.objects.*;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboard;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardButton;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class MyBot extends TelegramLongPollingBot {
@@ -39,6 +36,7 @@ public class MyBot extends TelegramLongPollingBot {
     private static ProductService productService = new ProductService();
     private static CategoryService categoryService = new CategoryService();
     private static CreateButtonService createButtonService = new CreateButtonService();
+    private User user;
 
     public MyBot(String botToken) {
         super(botToken);
@@ -47,6 +45,7 @@ public class MyBot extends TelegramLongPollingBot {
     @SneakyThrows
     @Override
     public void onUpdateReceived(Update update) {
+
         if (update.hasMessage()) {
             Message message = update.getMessage();
             Long chatId = update.getMessage().getChatId();
@@ -54,12 +53,11 @@ public class MyBot extends TelegramLongPollingBot {
             Optional<User> optionalUser = userService.getByChatId(chatId);
             String username = update.getMessage().getChat().getUserName();
 
-            User user = optionalUser.orElse(User.builder()
+            user = optionalUser.orElse(User.builder()
                     .chatId(chatId)
                     .username(username)
                     .state(State.ENTER_NAME)
                     .build());
-
 
             if (optionalUser.isEmpty()) {
                 userService.add(user);
@@ -69,6 +67,7 @@ public class MyBot extends TelegramLongPollingBot {
 
             if (message.hasText()) {
                 String text = message.getText();
+
                 if (text.equals("/start") && user.getState().equals(State.ENTER_NAME)) {
                     SendMessage sendMessage = new SendMessage();
                     text = """
@@ -134,7 +133,12 @@ public class MyBot extends TelegramLongPollingBot {
                         user.setState(State.CHOOSE_CATEGORY);
                         userService.update(user);
                         categoryPage(chatId, user, true);
-                    } else {
+                    } else if (user.getState().equals(State.CHOOSE_CATEGORY) && text.equals("\uD83D\uDE97 Buyurtma qilish")) {
+                        sendLocation(text, message, chatId);
+                    } else if (text.equals("◀\uFE0F Qaytish")) {
+                        user.setState(State.CHOOSE_CATEGORY);
+                        categoryPage(chatId, user, isAdmin);
+                    }  else{
 
                         if (user.getState().equals(State.ENTER_NAME)) {
                             user.setFullName(text);
@@ -233,6 +237,9 @@ public class MyBot extends TelegramLongPollingBot {
                 userService.update(user);
                 mainPage(chatId, createButtonService, isAdmin);
 
+            } else if (message.hasLocation()) {
+                user.setState(State.CONFIRMATION);
+                sendMessage("share contact", chatId);
             } else if (message.hasPhoto() && isAdmin(user) && user.getState().equals(State.SEND_PHOTO)) {
                 System.out.println("rasm");
                 PhotoSize photo = message.getPhoto().stream().sorted((o1, o2) -> o2.getWidth() * o2.getHeight() - o1.getWidth() * o1.getHeight())
@@ -260,9 +267,18 @@ public class MyBot extends TelegramLongPollingBot {
                     }
                 }
             }
-
         } else if (update.hasCallbackQuery()) {
+        }
+    }
 
+    private void sendMessage(String text, Long chatId) {
+        SendMessage sendMessage = new SendMessage();
+        sendMessage.setText(text);
+        sendMessage.setChatId(chatId);
+        try {
+            execute(sendMessage);
+        } catch (TelegramApiException e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -282,15 +298,13 @@ public class MyBot extends TelegramLongPollingBot {
     private void settingsPage(Long chatId, User user) {
         //TODO Baxodri aka
         myExecute(chatId, "Settings");
-
-
     }
 
     private void chatPage(Long chatId, User user) {
         String txt = """
                 @EnU098 (https://t.me/EnU098)
                 ☎ Call +998910339823
-                
+                                
                 Ushbu kontaktlar orqali biz biln bog'lanishingiz mumkin
                 """;
 
@@ -377,4 +391,40 @@ public class MyBot extends TelegramLongPollingBot {
         return BotConstants.USERNAME;
     }
 
+    private void sendLocation(String text, Message message, Long chatId) {
+
+        SendMessage sendMessage = new SendMessage();
+        sendMessage.setChatId(chatId);
+        sendMessage.setText("Share Location");
+
+        ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
+        replyKeyboardMarkup.setResizeKeyboard(true);
+        replyKeyboardMarkup.setOneTimeKeyboard(true);
+
+        List<KeyboardRow> rows = new ArrayList<>();
+        KeyboardRow row = new KeyboardRow();
+        KeyboardRow row1 = new KeyboardRow();
+
+        KeyboardButton keyboardButton = new KeyboardButton();
+        KeyboardButton keyboardButton1 = new KeyboardButton();
+        keyboardButton1.setText("◀\uFE0F Qaytish");
+        row1.add(keyboardButton1);
+        keyboardButton.setText("\uD83D\uDCCD Turgan joyimni jo'natish");
+        keyboardButton.setRequestLocation(true);
+        row.add(keyboardButton);
+        rows.add(row);
+        rows.add(row1);
+
+        replyKeyboardMarkup.setKeyboard(rows);
+        sendMessage.setReplyMarkup(replyKeyboardMarkup);
+
+        try {
+            execute(sendMessage);
+        } catch (TelegramApiException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
 }
+
+
