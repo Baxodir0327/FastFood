@@ -58,7 +58,7 @@ public class ProductService implements BaseService<Product> {
     @SneakyThrows
     @Override
     public List<Product> readFile() {
-        return gson.fromJson(Files.readString(Path.of(path)), new TypeToken<List>() {}.getType());
+        return gson.fromJson(Files.readString(Path.of(path)), new TypeToken<List<Product>>() {}.getType());
     }
 
     public List<Product> getProductsByCategoryName(String text) {

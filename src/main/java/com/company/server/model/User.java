@@ -11,6 +11,7 @@ import lombok.*;
 public class User extends BaseModel{
         private String fullName;
         private String username;
+        private String lastProduct;
         private String phoneNumber;
         private Long chatId;
         private State state;
