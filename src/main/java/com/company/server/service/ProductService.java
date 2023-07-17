@@ -64,7 +64,7 @@ public class ProductService implements BaseService<Product> {
     public List<Product> getProductsByCategoryName(String text) {
         return getAll()
                 .stream()
-                .filter(product -> product.getCategory().getName().equals(text))
+                .filter(product -> product.getName().equals(text))
                 .toList();
     }
 }
