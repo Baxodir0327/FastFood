@@ -222,8 +222,6 @@ public class MyBot extends TelegramLongPollingBot {
                         String path4 = "src/main/resources/menuPhoto/img_3.png";
                         sendPhoto(chatId, path4);
 
-                    } else {
-
                     } else if (user.getState().equals(State.CHOOSE_CATEGORY) && text.equals("\uD83D\uDE97 Buyurtma qilish")) {
                         sendLocation(text, message, chatId);
                     } else if (text.equals("◀\uFE0F Qaytish")) {
