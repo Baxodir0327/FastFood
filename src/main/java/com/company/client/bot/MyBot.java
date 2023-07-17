@@ -287,8 +287,14 @@ public class MyBot extends TelegramLongPollingBot {
     }
 
     private void chatPage(Long chatId, User user) {
-        //TODO Nodir aka
-        myExecute(chatId, "Chat");
+        String txt = """
+                @EnU098 (https://t.me/EnU098)
+                ☎ Call +998910339823
+                
+                Ushbu kontaktlar orqali biz biln bog'lanishingiz mumkin
+                """;
+
+        myExecute(chatId, txt);
     }
 
     private void categoryPage(Long chatId, User user, boolean isAdmin) {
