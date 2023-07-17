@@ -57,7 +57,7 @@ public class CategoryService implements BaseService<Category> {
     @SneakyThrows
     @Override
     public List<Category> readFile() {
-        return gson.fromJson(Files.readString(path), new TypeReference<List<Category>>() {
+        return gson.fromJson(Files.readString(path), new TypeToken<List<Category>>() {
         }.getType());
     }
 }

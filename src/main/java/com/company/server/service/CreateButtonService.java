@@ -12,28 +12,48 @@ import java.util.UUID;
 
 public class CreateButtonService {
     private UUID id;
-    public ReplyKeyboardMarkup createReplyButton(List<String> buttonsTitle, boolean shareContact) {
+    public ReplyKeyboardMarkup createReplyButton(List<String> buttonsTitle) {
 
         List<KeyboardRow> rows = new ArrayList<>();
         KeyboardRow row = new KeyboardRow();
 
         for (int i = 0; i < buttonsTitle.size(); i++) {
-            if (i != 0 && i % 2 == 0) {
+            if (i == 0) {
+                row.add(new KeyboardButton(buttonsTitle.get(i)));
                 rows.add(row);
                 row = new KeyboardRow();
+            } else {
+                if (i != 1 && i % 2 != 0) {
+                    rows.add(row);
+                    row = new KeyboardRow();
+                }
+                KeyboardButton e = new KeyboardButton(buttonsTitle.get(i));
+                row.add(e);
             }
-            KeyboardButton e = new KeyboardButton(buttonsTitle.get(i));
-            e.setRequestContact(shareContact);
-            row.add(e);
         }
 
         rows.add(row);
         ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
-        replyKeyboardMarkup.setOneTimeKeyboard(shareContact);
-        replyKeyboardMarkup.setSelective(shareContact);
+        replyKeyboardMarkup.setSelective(true);
         replyKeyboardMarkup.setKeyboard(rows);
         replyKeyboardMarkup.setResizeKeyboard(true);
         return replyKeyboardMarkup;
+    }
+    public ReplyKeyboardMarkup createShareContactButton(){
+
+        List<KeyboardRow> rows = new ArrayList<>();
+        KeyboardRow row = new KeyboardRow();
+        KeyboardButton shareContact = new KeyboardButton("Share Contact");
+        shareContact.setRequestContact(true);
+        row.add(shareContact);
+        rows.add(row);
+
+        ReplyKeyboardMarkup keyboardMarkup = new ReplyKeyboardMarkup();
+        keyboardMarkup.setKeyboard(rows);
+        keyboardMarkup.setOneTimeKeyboard(true);
+        keyboardMarkup.setSelective(true);
+        keyboardMarkup.setResizeKeyboard(true);
+        return keyboardMarkup;
     }
 
     public InlineKeyboardMarkup createInlineKeyboard(List<String> keyboasrdList, int numberOfRows) {

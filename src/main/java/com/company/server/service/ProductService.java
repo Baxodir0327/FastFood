@@ -2,6 +2,7 @@ package com.company.server.service;
 
 import com.company.server.model.Product;
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import lombok.SneakyThrows;
 
@@ -11,10 +12,10 @@ import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.util.*;
 
-public class ProductService implements BaseService<Product> {
+public class ProductService{
     String path = "src/main/resources/product.json";
+    Gson gson = new Gson();
 
-    @Override
     public Product add(Product product) {
         List<Product> products = readFile();
         products.add(product);
@@ -22,32 +23,27 @@ public class ProductService implements BaseService<Product> {
         return product;
     }
 
-    @Override
     public List<Product> getAll() {
         return readFile();
     }
 
-    @Override
     public Product getById(UUID id) {
         return readFile().stream()
                .filter(product -> product.getId().equals(id)).findFirst().orElse(null);
     }
 
-    @Override
     public void delete(UUID id) {
         List<Product> products = readFile();
         products.removeIf(product -> product.getId().equals(id));
         writeFile(products);
     }
 
-    @Override
     public Product update(Product product) {
         delete(product.getId());
         add(product);
         return product;
     }
 
-    @Override
     public void writeFile(List<Product> list) {
         try {
             Files.writeString(Path.of(path), gson.toJson(list), StandardOpenOption.TRUNCATE_EXISTING);
@@ -57,9 +53,8 @@ public class ProductService implements BaseService<Product> {
     }
 
     @SneakyThrows
-    @Override
     public List<Product> readFile() {
-        return gson.fromJson(Files.readString(Path.of(path)), new TypeToken<List>() {}.getType());
+        return gson.fromJson(Files.readString(Path.of(path)), new TypeToken<List<Product>>() {}.getType());
     }
 
     public List<Product> getProductsByCategoryName(String text) {
